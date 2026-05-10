@@ -922,14 +922,18 @@
           <input class="form-input" id="ev-type" placeholder="e.g. travel, meeting, shift…" style="flex:1">
         </div>
       </div>
+      <div class="form-group">
+        <label class="form-label">Date</label>
+        <input class="form-input" type="date" id="ev-date">
+      </div>
       <div class="dt-row">
         <div class="form-group">
-          <label class="form-label">Date</label>
-          <input class="form-input" type="date" id="ev-date">
+          <label class="form-label">Start Time</label>
+          <input class="form-input" type="time" id="ev-time">
         </div>
         <div class="form-group">
-          <label class="form-label">Time</label>
-          <input class="form-input" type="time" id="ev-time">
+          <label class="form-label">End Time</label>
+          <input class="form-input" type="time" id="ev-time-end">
         </div>
       </div>
       <div class="form-group">
@@ -1347,7 +1351,7 @@ async function renderSchedule() {
           <div class="event-info">
             <div class="event-title">${ev.title}</div>
             <div class="event-meta">
-              <span>${formatTime(ev.date, ev.time)}</span>
+              <span>${formatTime(ev.date, ev.time)}${ev.timeEnd ? ' – ' + formatTime(ev.date, ev.timeEnd) : ''}</span>
             </div>
             <span class="event-type-pill">${ev.type||'event'}</span>
             ${isShared ? '<div class="shared-badge"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg> Shared event</div>' : ''}
@@ -1399,7 +1403,8 @@ async function openEventModal(event) {
   document.getElementById('ev-title').value = event?.title || '';
   document.getElementById('ev-type').value  = event?.type  || '';
   document.getElementById('ev-date').value  = event?.date  || new Date().toISOString().slice(0,10);
-  document.getElementById('ev-time').value  = event?.time  || '09:00';
+  document.getElementById('ev-time').value     = event?.time    || '09:00';
+  document.getElementById('ev-time-end').value = event?.timeEnd || '10:00';
 
   selectedColor = event?.color || COLORS[0];
   buildColorPicker();
@@ -1463,6 +1468,7 @@ async function saveEvent() {
     type: type || 'event',
     date,
     time,
+    timeEnd: document.getElementById('ev-time-end').value || '',
     color: selectedColor,
     userIds: Array.from(selectedUserIds),
     createdBy: currentUser.uid,
@@ -1498,8 +1504,9 @@ async function deleteEvent() {
 function openEventDetail(ev) {
   document.getElementById('detail-title').textContent = ev.title;
   document.getElementById('detail-color-bar').style.background = ev.color || '#4f8fff';
-  document.getElementById('detail-datetime').textContent =
-    `${new Date(ev.date+'T00:00').toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'})} at ${formatTime(ev.date,ev.time)}`;
+  const dateLabel = new Date(ev.date+'T00:00').toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
+  const timeRange = ev.timeEnd ? `${formatTime(ev.date,ev.time)} – ${formatTime(ev.date,ev.timeEnd)}` : formatTime(ev.date,ev.time);
+  document.getElementById('detail-datetime').textContent = `${dateLabel} · ${timeRange}`;
   document.getElementById('detail-type').textContent = ev.type || 'event';
 
   const sharedRow = document.getElementById('detail-shared-row');
