@@ -765,8 +765,8 @@
   <div class="auth-card">
     <div class="auth-error" id="auth-error"></div>
     <div class="form-group">
-      <label class="form-label">Email</label>
-      <input class="form-input" type="email" id="auth-email" placeholder="you@example.com" autocomplete="email">
+      <label class="form-label">Username</label>
+      <input class="form-input" type="text" id="auth-username" placeholder="Your name" autocomplete="username">
     </div>
     <div class="form-group">
       <label class="form-label">Password</label>
@@ -1009,7 +1009,11 @@
         <input class="form-input" id="new-user-name" placeholder="Jane Doe">
       </div>
       <div class="form-group">
-        <label class="form-label">Email</label>
+        <label class="form-label">Username <span style="color:var(--sub);font-size:10px;">(for login)</span></label>
+        <input class="form-input" id="new-user-username" placeholder="jane_doe">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email <span style="color:var(--sub);font-size:10px;">(hidden from users)</span></label>
         <input class="form-input" type="email" id="new-user-email" placeholder="jane@example.com">
       </div>
       <div class="form-group">
@@ -1138,14 +1142,28 @@ waitForFirebase(() => {
   });
 
   document.getElementById('btn-login').addEventListener('click', async () => {
-    const email = document.getElementById('auth-email').value.trim();
-    const pass  = document.getElementById('auth-password').value;
-    const errEl = document.getElementById('auth-error');
+    const username = document.getElementById('auth-username').value.trim();
+    const pass     = document.getElementById('auth-password').value;
+    const errEl    = document.getElementById('auth-error');
     errEl.style.display = 'none';
+    if (!username || !pass) {
+      errEl.textContent = 'Please enter username and password';
+      errEl.style.display = 'block';
+      return;
+    }
     try {
-      await window.__fb.signInWithEmailAndPassword(auth, email, pass);
+      // Look up email by username in Firestore
+      const { db, collection, query, where, getDocs } = window.__fb;
+      const q = query(collection(db, 'users'), where('username', '==', username));
+      const snap = await getDocs(q);
+      if (snap.empty) throw new Error('User not found');
+      const userData = snap.docs[0].data();
+      if (!userData.email) throw new Error('Account has no email configured');
+      await window.__fb.signInWithEmailAndPassword(auth, userData.email, pass);
     } catch(e) {
-      errEl.textContent = e.message;
+      errEl.textContent = e.message === 'Firebase: Error (auth/invalid-credential).'
+        ? 'Incorrect password'
+        : e.message;
       errEl.style.display = 'block';
     }
   });
@@ -1233,6 +1251,7 @@ function initApp() {
   document.getElementById('btn-add-user').addEventListener('click', () => {
     document.getElementById('add-user-error').style.display = 'none';
     document.getElementById('new-user-name').value = '';
+    document.getElementById('new-user-username').value = '';
     document.getElementById('new-user-email').value = '';
     document.getElementById('new-user-pass').value = '';
     document.getElementById('modal-add-user').classList.add('open');
@@ -1554,27 +1573,36 @@ async function loadUsers() {
 }
 
 async function createUser() {
-  const name  = document.getElementById('new-user-name').value.trim();
-  const email = document.getElementById('new-user-email').value.trim();
-  const pass  = document.getElementById('new-user-pass').value;
-  const role  = document.getElementById('new-user-role').value;
-  const errEl = document.getElementById('add-user-error');
+  const name     = document.getElementById('new-user-name').value.trim();
+  const username = document.getElementById('new-user-username').value.trim().toLowerCase();
+  const email    = document.getElementById('new-user-email').value.trim();
+  const pass     = document.getElementById('new-user-pass').value;
+  const role     = document.getElementById('new-user-role').value;
+  const errEl    = document.getElementById('add-user-error');
   errEl.style.display = 'none';
 
-  if (!name || !email || !pass) {
+  if (!name || !username || !email || !pass) {
     errEl.textContent = 'Please fill all fields';
     errEl.style.display = 'block';
     return;
   }
 
   try {
-    const { auth, db, createUserWithEmailAndPassword, doc, setDoc } = window.__fb;
-    // Create secondary auth instance to avoid signing in as the new user
-    // We store the current token, create user, then restore
+    const { auth, db, createUserWithEmailAndPassword, doc, setDoc, collection, query, where, getDocs } = window.__fb;
+
+    // Check username is unique
+    const uq = query(collection(db,'users'), where('username','==',username));
+    const usnap = await getDocs(uq);
+    if (!usnap.empty) {
+      errEl.textContent = 'Username already taken';
+      errEl.style.display = 'block';
+      return;
+    }
+
     const result = await createUserWithEmailAndPassword(auth, email, pass);
     const newUid = result.user.uid;
 
-    await setDoc(doc(db,'users',newUid), { name, email, role, createdAt: Date.now() });
+    await setDoc(doc(db,'users',newUid), { name, username, email, role, createdAt: Date.now() });
 
     // Sign back in as the moderator
     // (Firebase automatically signs in newly created user — workaround: sign mod back in)
