@@ -807,8 +807,8 @@
         <button class="icon-btn" id="btn-week-prev">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
         </button>
-        <div class="week-label" id="week-label">
-          Week
+        <div class="week-label-wrap" style="flex:1;text-align:center;">
+          <div class="week-label" id="week-label">This Week</div>
           <span class="week-sub" id="week-sub"></span>
         </div>
         <button class="icon-btn" id="btn-week-next">
@@ -1271,6 +1271,7 @@ function buildTypeOptions() {
 // ── SCHEDULE ──────────────────────────────────────────────
 async function renderSchedule() {
   const container = document.getElementById('schedule-container');
+  if (!container) return;
   container.innerHTML = '<div class="loading-wrap"><div class="spinner"></div></div>';
 
   const days = getWeekDates(currentWeekOffset);
@@ -1279,16 +1280,20 @@ async function renderSchedule() {
   // Week label
   const wStart = days[0], wEnd = days[6];
   const opts = { month:'short', day:'numeric' };
-  document.getElementById('week-label').textContent = 'This Week';
-  document.getElementById('week-sub').textContent =
+  const weekLabelEl = document.getElementById('week-label');
+  const weekSubEl   = document.getElementById('week-sub');
+
+  if (weekSubEl) weekSubEl.textContent =
     `${wStart.toLocaleDateString('en-US', opts)} – ${wEnd.toLocaleDateString('en-US', opts)}`;
 
-  if (currentWeekOffset < 0) {
-    document.getElementById('week-label').textContent = 'Past Week';
-  } else if (currentWeekOffset > 0) {
-    document.getElementById('week-label').textContent = `+${currentWeekOffset} Week${currentWeekOffset>1?'s':''}`;
-  } else {
-    document.getElementById('week-label').textContent = 'This Week';
+  if (weekLabelEl) {
+    if (currentWeekOffset < 0) {
+      weekLabelEl.textContent = 'Past Week';
+    } else if (currentWeekOffset > 0) {
+      weekLabelEl.textContent = `+${currentWeekOffset} Week${currentWeekOffset>1?'s':''}`;
+    } else {
+      weekLabelEl.textContent = 'This Week';
+    }
   }
 
   // Fetch events
