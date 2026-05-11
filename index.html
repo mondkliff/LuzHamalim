@@ -1352,10 +1352,12 @@ async function renderSchedule() {
   if (weekLabelEl) {
     if (currentWeekOffset < 0) {
       weekLabelEl.textContent = 'שבוע שעבר';
-    } else if (currentWeekOffset > 0) {
+    } else if (currentWeekOffset > 14) {
       weekLabelEl.textContent = `+${currentWeekOffset} שבוע{currentWeekOffset>1?'s':''}`;
-    } else {
+    } else if (currentWeekOffset > 7) {
       weekLabelEl.textContent = 'שבוע הבא';
+    } else {
+      weekLabelEl.textContent = 'השבוע הנוכחי';
     }
   }
 
