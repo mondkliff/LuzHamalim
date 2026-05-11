@@ -759,22 +759,22 @@
 ════════════════════════════════════════════════════════════ -->
 <div id="screen-auth" class="screen active">
   <div style="text-align:center; margin-bottom: 10px;">
-    <div class="auth-logo">Schedulr</div>
-    <div class="auth-title">Team<br>Schedule Manager</div>
+    <div class="auth-logo">לוז חמלים</div>
+    <div class="auth-title">לא פותח על ידי מחלקת בי איי<br>מערכת פשוטה לשימוש</div>
   </div>
   <div class="auth-card">
     <div class="auth-error" id="auth-error"></div>
     <div class="form-group">
-      <label class="form-label">Username</label>
+      <label class="form-label">שם משתמש</label>
       <input class="form-input" type="text" id="auth-username" placeholder="Your name" autocomplete="username">
     </div>
     <div class="form-group">
-      <label class="form-label">Password</label>
+      <label class="form-label">סיסמה</label>
       <input class="form-input" type="password" id="auth-password" placeholder="••••••••" autocomplete="current-password">
     </div>
     <button class="btn btn-primary" id="btn-login">Sign In</button>
     <div style="text-align:center; margin-top: 20px; font-size:12px; color:var(--muted); font-family:var(--mono);">
-      Contact your moderator to get an account
+      תצרו קשר עם רומן ליצירת חשבון
     </div>
   </div>
 </div>
@@ -786,7 +786,7 @@
 
   <!-- TOP BAR -->
   <div class="topbar">
-    <div class="topbar-logo">Schedulr</div>
+    <div class="topbar-logo">לוז</div>
     <div class="topbar-user">
       <span id="topbar-role-badge" class="role-badge"></span>
       <div class="avatar" id="topbar-avatar">?</div>
@@ -808,7 +808,7 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
         </button>
         <div class="week-label-wrap" style="flex:1;text-align:center;">
-          <div class="week-label" id="week-label">This Week</div>
+          <div class="week-label" id="week-label">השבוע הנוכחי</div>
           <span class="week-sub" id="week-sub"></span>
         </div>
         <button class="icon-btn" id="btn-week-next">
@@ -820,11 +820,11 @@
 
     <!-- ── SEARCH PAGE (mod only) ── -->
     <div id="page-search" class="page" style="display:none">
-      <div class="section-label">Search Events</div>
+      <div class="section-label">חיפוש אירועים</div>
       <div class="search-bar">
         <input class="search-input" id="search-time" type="time" placeholder="Time">
         <select class="form-input" id="search-type" style="max-width:130px">
-          <option value="">All types</option>
+          <option value="">כל הסוגים</option>
         </select>
       </div>
       <div style="padding: 0 20px 8px; display:flex; gap:8px; align-items:center;">
@@ -837,31 +837,27 @@
     <!-- ── USERS PAGE (mod only) ── -->
     <div id="page-users" class="page" style="display:none">
       <div style="display:flex; align-items:center; justify-content:space-between; padding: 16px 20px 8px;">
-        <div class="section-label" style="padding:0">Users</div>
-        <button class="btn btn-primary btn-sm" id="btn-add-user">+ Add User</button>
+        <div class="section-label" style="padding:0">משתמשים</div>
+        <button class="btn btn-primary btn-sm" id="btn-add-user">+ יצירת משתמש</button>
       </div>
       <div class="users-list" id="users-list"></div>
     </div>
 
     <!-- ── PROFILE PAGE ── -->
     <div id="page-profile" class="page" style="display:none">
-      <div class="section-label">My Profile</div>
+      <div class="section-label">פרופיל שלי</div>
       <div class="profile-section">
         <div class="profile-row">
-          <span class="profile-row-label">Email</span>
-          <span class="profile-row-value" id="profile-email">—</span>
-        </div>
-        <div class="profile-row">
-          <span class="profile-row-label">Name</span>
+          <span class="profile-row-label">שם</span>
           <span class="profile-row-value" id="profile-name">—</span>
         </div>
         <div class="profile-row">
-          <span class="profile-row-label">Role</span>
+          <span class="profile-row-label">תפקיד</span>
           <span class="profile-row-value" id="profile-role">—</span>
         </div>
       </div>
       <div style="padding: 20px;">
-        <button class="btn btn-ghost" id="btn-logout-profile">Sign Out</button>
+        <button class="btn btn-ghost" id="btn-logout-profile">לצאת</button>
       </div>
     </div>
 
@@ -910,43 +906,49 @@
 <div class="modal-overlay" id="modal-event">
   <div class="modal-sheet">
     <div class="modal-handle"></div>
-    <div class="modal-title" id="modal-event-title">New Event</div>
+    <div class="modal-title" id="modal-event-title">אירוע חדש</div>
     <div class="modal-body">
       <div class="form-group">
-        <label class="form-label">Title</label>
+        <label class="form-label">כותרת</label>
         <input class="form-input" id="ev-title" placeholder="Event title">
       </div>
       <div class="form-group">
-        <label class="form-label">Type</label>
+        <label class="form-label">סוג</label>
         <div style="display:flex; gap:8px;">
           <input class="form-input" id="ev-type" placeholder="e.g. travel, meeting, shift…" style="flex:1">
         </div>
       </div>
-      <div class="form-group">
-        <label class="form-label">Date</label>
-        <input class="form-input" type="date" id="ev-date">
+      <div class="dt-row">
+        <div class="form-group">
+          <label class="form-label">תאריך התחלה</label>
+          <input class="form-input" type="date" id="ev-date">
+        </div>
+        <div class="form-group">
+          <label class="form-label">שעת התחלה</label>
+          <input class="form-input" type="time" id="ev-time">
+        </div>
       </div>
       <div class="dt-row">
         <div class="form-group">
-          <label class="form-label">Start Time</label>
-          <input class="form-input" type="time" id="ev-time">
+          <label class="form-label">תאריך הסוף</label>
+          <input class="form-input" type="date" id="ev-date-end">
         </div>
         <div class="form-group">
-          <label class="form-label">End Time</label>
+          <label class="form-label">שעת הסוף</label>
           <input class="form-input" type="time" id="ev-time-end">
         </div>
       </div>
       <div class="form-group">
-        <label class="form-label">Color</label>
+        <label class="form-label">צבע</label>
         <div class="color-row" id="color-picker"></div>
       </div>
       <div class="form-group" id="ev-users-group">
-        <label class="form-label">Assign to Users</label>
+        <label class="form-label">משתמשים משתתפים</label>
         <div class="checkbox-list" id="ev-users-list"></div>
       </div>
       <div style="display:flex; gap:10px; margin-top:20px; padding-bottom:4px;">
-        <button class="btn btn-ghost" id="btn-cancel-event" style="flex:1">Cancel</button>
-        <button class="btn btn-primary" id="btn-save-event" style="flex:1">Save</button>
+        <button class="btn btn-ghost" id="btn-cancel-event" style="flex:1">לבטל</button>
+        <button class="btn btn-primary" id="btn-save-event" style="flex:1">לשמור</button>
       </div>
       <div style="margin-top:10px;" id="ev-delete-wrap"></div>
     </div>
@@ -957,7 +959,7 @@
 <div class="modal-overlay" id="modal-event-detail">
   <div class="modal-sheet">
     <div class="modal-handle"></div>
-    <div class="modal-title" id="detail-title">Event</div>
+    <div class="modal-title" id="detail-title">אירוע</div>
     <div class="modal-body">
       <div class="event-detail-color-bar" id="detail-color-bar"></div>
       <div class="detail-row">
@@ -966,7 +968,7 @@
           <line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
         </svg>
         <div>
-          <div class="detail-label">Date & Time</div>
+          <div class="detail-label">תאריך & שעה</div>
           <div class="detail-value" id="detail-datetime">—</div>
         </div>
       </div>
@@ -976,7 +978,7 @@
           <line x1="7" y1="7" x2="7.01" y2="7"/>
         </svg>
         <div>
-          <div class="detail-label">Type</div>
+          <div class="detail-label">סוג</div>
           <div class="detail-value" id="detail-type">—</div>
         </div>
       </div>
@@ -986,12 +988,12 @@
           <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>
         </svg>
         <div>
-          <div class="detail-label">Shared With</div>
+          <div class="detail-label">משותף עם</div>
           <div class="detail-value result-users" id="detail-shared-users"></div>
         </div>
       </div>
       <div style="margin-top:20px; padding-bottom:4px;">
-        <button class="btn btn-ghost" id="btn-close-detail">Close</button>
+        <button class="btn btn-ghost" id="btn-close-detail">סגור</button>
       </div>
     </div>
   </div>
@@ -1325,11 +1327,11 @@ async function renderSchedule() {
 
   if (weekLabelEl) {
     if (currentWeekOffset < 0) {
-      weekLabelEl.textContent = 'Past Week';
+      weekLabelEl.textContent = 'שבוע שעבר';
     } else if (currentWeekOffset > 0) {
       weekLabelEl.textContent = `+${currentWeekOffset} Week${currentWeekOffset>1?'s':''}`;
     } else {
-      weekLabelEl.textContent = 'This Week';
+      weekLabelEl.textContent = 'שבוע הבא';
     }
   }
 
@@ -1350,15 +1352,18 @@ async function renderSchedule() {
   container.innerHTML = '';
   days.forEach(day => {
     const dateStr = localDateStr(day);
-    const dayEvents = events.filter(e => e.date === dateStr)
-      .sort((a,b) => (a.time||'').localeCompare(b.time||''));
+    const dayEvents = events.filter(e => {
+      const start = e.date;
+      const end   = e.dateEnd || e.date;
+      return dateStr >= start && dateStr <= end;
+    }).sort((a,b) => (a.time||'').localeCompare(b.time||''));
 
     const isToday = day.getTime() === today.getTime();
 
     const block = document.createElement('div');
     block.className = 'day-block' + (isToday ? ' day-today' : '');
 
-    const dayNames = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    const dayNames = ['א׳','ב׳','ג׳','ד׳','ה׳','ו׳','ש׳'];
     block.innerHTML = `
       <div class="day-header">
         <span class="day-name">${dayNames[day.getDay()]}</span>
@@ -1370,7 +1375,7 @@ async function renderSchedule() {
     const list = block.querySelector(`#day-${dateStr}`);
 
     if (dayEvents.length === 0) {
-      list.innerHTML = '<div class="empty-day">No events</div>';
+      list.innerHTML = '<div class="empty-day">אין אירועים -_-</div>';
     } else {
       dayEvents.forEach(ev => {
         const item = document.createElement('div');
@@ -1384,7 +1389,7 @@ async function renderSchedule() {
           <div class="event-info">
             <div class="event-title">${ev.title}</div>
             <div class="event-meta">
-              <span>${formatTime(ev.date, ev.time)}${ev.timeEnd ? ' – ' + formatTime(ev.date, ev.timeEnd) : ''}</span>
+              <span>${formatTime(ev.date, ev.time)}${ev.timeEnd ? ' – ' + (ev.dateEnd && ev.dateEnd !== ev.date ? new Date(ev.dateEnd+'T00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'}) + ' ' : '') + formatTime(ev.dateEnd||ev.date, ev.timeEnd) : ''}</span>
             </div>
             <span class="event-type-pill">${ev.type||'event'}</span>
             ${isShared ? '<div class="shared-badge"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg> Shared event</div>' : ''}
@@ -1413,10 +1418,9 @@ async function fetchEventsForDates(dateStrings) {
 
   let q;
   if (isModerator()) {
-    // Mod sees all events in date range
-    q = query(collection(db,'events'), where('date','>=',first), where('date','<=',last));
+    // Fetch events that start within the week OR end within the week
+    q = query(collection(db,'events'), where('date','<=',last), where('date','>=',first));
   } else {
-    // User sees only events assigned to them
     q = query(collection(db,'events'),
       where('date','>=',first),
       where('date','<=',last),
@@ -1435,9 +1439,10 @@ async function openEventModal(event) {
   document.getElementById('modal-event-title').textContent = event ? 'Edit Event' : 'New Event';
   document.getElementById('ev-title').value = event?.title || '';
   document.getElementById('ev-type').value  = event?.type  || '';
-  document.getElementById('ev-date').value  = event?.date  || localDateStr(new Date());
-  document.getElementById('ev-time').value     = event?.time    || '09:00';
-  document.getElementById('ev-time-end').value = event?.timeEnd || '10:00';
+  document.getElementById('ev-date').value      = event?.date    || localDateStr(new Date());
+  document.getElementById('ev-date-end').value  = event?.dateEnd || event?.date || localDateStr(new Date());
+  document.getElementById('ev-time').value      = event?.time    || '09:00';
+  document.getElementById('ev-time-end').value  = event?.timeEnd || '10:00';
 
   selectedColor = event?.color || COLORS[0];
   buildColorPicker();
@@ -1500,6 +1505,7 @@ async function saveEvent() {
     title,
     type: type || 'event',
     date,
+    dateEnd: document.getElementById('ev-date-end').value || date,
     time,
     timeEnd: document.getElementById('ev-time-end').value || '',
     color: selectedColor,
@@ -1538,9 +1544,15 @@ async function openEventDetail(ev) {
   if (allUsers.length === 0) await loadUsers();
   document.getElementById('detail-title').textContent = ev.title;
   document.getElementById('detail-color-bar').style.background = ev.color || '#4f8fff';
-  const dateLabel = new Date(ev.date+'T00:00').toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
-  const timeRange = ev.timeEnd ? `${formatTime(ev.date,ev.time)} – ${formatTime(ev.date,ev.timeEnd)}` : formatTime(ev.date,ev.time);
-  document.getElementById('detail-datetime').textContent = `${dateLabel} · ${timeRange}`;
+  const startLabel = new Date(ev.date+'T00:00').toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+  const endLabel   = (ev.dateEnd && ev.dateEnd !== ev.date)
+    ? new Date(ev.dateEnd+'T00:00').toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'})
+    : null;
+  const dateRange  = endLabel ? `${startLabel} – ${endLabel}` : startLabel;
+  const timeRange  = ev.timeEnd
+    ? `${formatTime(ev.date,ev.time)} – ${formatTime(ev.dateEnd||ev.date,ev.timeEnd)}`
+    : formatTime(ev.date,ev.time);
+  document.getElementById('detail-datetime').textContent = `${dateRange} · ${timeRange}`;
   document.getElementById('detail-type').textContent = ev.type || 'event';
 
   const sharedRow = document.getElementById('detail-shared-row');
