@@ -1347,7 +1347,7 @@ async function renderSchedule() {
   const weekSubEl   = document.getElementById('week-sub');
 
   if (weekSubEl) weekSubEl.textContent =
-    `${wStart.toLocaleDateString('he-IL', opts)} – ${wEnd.toLocaleDateString('he-IL', opts)}`;
+    `${wStart.toLocaleDateString('en-US', opts)} – ${wEnd.toLocaleDateString('en-US', opts)}`;
 
   if (weekLabelEl) {
     if (currentWeekOffset < 0) {
