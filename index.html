@@ -1534,7 +1534,8 @@ async function deleteEvent() {
 }
 
 // ── EVENT DETAIL (user) ────────────────────────────────────
-function openEventDetail(ev) {
+async function openEventDetail(ev) {
+  if (allUsers.length === 0) await loadUsers();
   document.getElementById('detail-title').textContent = ev.title;
   document.getElementById('detail-color-bar').style.background = ev.color || '#4f8fff';
   const dateLabel = new Date(ev.date+'T00:00').toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
@@ -1548,11 +1549,11 @@ function openEventDetail(ev) {
 
   if (ev.userIds && ev.userIds.length > 1) {
     sharedRow.style.display = 'flex';
-    // We show user IDs; ideally we'd resolve names but we'd need to cache them
     ev.userIds.forEach(uid => {
       const tag = document.createElement('span');
       tag.className = 'user-tag';
-      tag.textContent = uid === currentUser.uid ? 'You' : uid.slice(0,8)+'…';
+      const u = allUsers.find(u => u.id === uid);
+      tag.textContent = uid === currentUser.uid ? 'You' : (u ? u.name : uid.slice(0,8)+'…');
       sharedUsers.appendChild(tag);
     });
   } else {
