@@ -889,7 +889,7 @@
       </svg>
       Users
     </button>
-    <button class="nav-item" data-page="profile">
+    <button class="nav-item mod-only hidden" data-page="profile">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/>
       </svg>
@@ -1074,6 +1074,13 @@ function formatDate(d) {
   return d.toLocaleDateString('en-US', { weekday:'short', month:'short', day:'numeric' });
 }
 
+function localDateStr(date) {
+  const y = date.getFullYear();
+  const m = String(date.getMonth()+1).padStart(2,'0');
+  const d = String(date.getDate()).padStart(2,'0');
+  return `${y}-${m}-${d}`;
+}
+
 function formatTime(dateStr, timeStr) {
   if (!dateStr || !timeStr) return '—';
   const dt = new Date(`${dateStr}T${timeStr}`);
@@ -1205,6 +1212,13 @@ function initApp() {
     else el.classList.add('hidden');
   });
 
+  // For regular users: hide bottom nav completely
+  if (!isMod) {
+    document.getElementById('bottom-nav').style.display = 'none';
+    // Also reduce bottom padding since no nav bar
+    document.querySelector('.main-content').style.paddingBottom = '20px';
+  }
+
   // Nav
   document.querySelectorAll('.nav-item').forEach(btn => {
     btn.addEventListener('click', () => showPage(btn.dataset.page));
@@ -1320,7 +1334,7 @@ async function renderSchedule() {
   }
 
   // Fetch events
-  const dateStrings = days.map(d => d.toISOString().slice(0,10));
+  const dateStrings = days.map(d => localDateStr(d));
   let events = [];
   try {
     events = await fetchEventsForDates(dateStrings);
@@ -1335,7 +1349,7 @@ async function renderSchedule() {
   // Build HTML
   container.innerHTML = '';
   days.forEach(day => {
-    const dateStr = day.toISOString().slice(0,10);
+    const dateStr = localDateStr(day);
     const dayEvents = events.filter(e => e.date === dateStr)
       .sort((a,b) => (a.time||'').localeCompare(b.time||''));
 
@@ -1421,7 +1435,7 @@ async function openEventModal(event) {
   document.getElementById('modal-event-title').textContent = event ? 'Edit Event' : 'New Event';
   document.getElementById('ev-title').value = event?.title || '';
   document.getElementById('ev-type').value  = event?.type  || '';
-  document.getElementById('ev-date').value  = event?.date  || new Date().toISOString().slice(0,10);
+  document.getElementById('ev-date').value  = event?.date  || localDateStr(new Date());
   document.getElementById('ev-time').value     = event?.time    || '09:00';
   document.getElementById('ev-time-end').value = event?.timeEnd || '10:00';
 
