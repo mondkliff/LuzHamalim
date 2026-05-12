@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
@@ -16,7 +16,6 @@
     addDoc, updateDoc, deleteDoc, query, where, orderBy, Timestamp
   } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-  // ── CONFIG ── Replace with your Firebase project config ──────────────────
   const firebaseConfig = {
     apiKey: "AIzaSyBZwWLwUenT82KVnvC6ZqyD2xuODvtLlCA",
     authDomain: "hamalim-f60dc.firebaseapp.com",
@@ -25,7 +24,6 @@
     messagingSenderId: "4462919907",
     appId: "1:4462919907:web:922f1ef28380bfe655c5d6"
   };
-  // ─────────────────────────────────────────────────────────────────────────
 
   const app   = initializeApp(firebaseConfig);
   const auth  = getAuth(app);
@@ -37,7 +35,6 @@
 </script>
 
 <style>
-  /* ── DESIGN: Clean slate-dark industrial, monospaced accents ── */
   @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap');
 
   :root {
@@ -72,14 +69,24 @@
     margin: 0 auto;
     position: relative;
     overflow-x: hidden;
+    direction: rtl;
   }
 
-  /* ── SCROLLBAR ── */
+  /* Hebrew text improvements */
+  p, span, div, label, button, input, select, option, h1, h2, h3 {
+    font-size-adjust: auto;
+  }
+
+  /* Ensure Hebrew reads naturally */
+  [lang="he"], .he-text {
+    font-family: 'Arial Hebrew', 'David', var(--sans);
+    letter-spacing: 0;
+  }
+
   ::-webkit-scrollbar { width: 4px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
 
-  /* ── SCREENS ── */
   .screen { display: none; min-height: 100dvh; flex-direction: column; }
   .screen.active { display: flex; }
 
@@ -89,23 +96,17 @@
     justify-content: center;
     padding: 32px 24px;
     background: var(--bg);
-  }
-
-  .auth-logo {
-    font-family: var(--mono);
-    font-size: 13px;
-    color: var(--accent);
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    margin-bottom: 8px;
+    direction: rtl;
   }
 
   .auth-title {
-    font-size: 28px;
+    font-size: 32px;
     font-weight: 600;
     text-align: center;
     margin-bottom: 40px;
-    line-height: 1.2;
+    line-height: 1.3;
+    letter-spacing: -0.5px;
+    color: var(--text);
   }
 
   .auth-card {
@@ -116,15 +117,21 @@
     width: 100%;
   }
 
+  /* Auth inputs stay LTR for username/password */
+  #screen-auth .form-input {
+    direction: ltr;
+    text-align: left;
+  }
+
   .form-group { margin-bottom: 16px; }
   .form-label {
     display: block;
     font-family: var(--mono);
-    font-size: 11px;
+    font-size: 12px;
     color: var(--sub);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+    letter-spacing: 0.04em;
     margin-bottom: 6px;
+    text-align: right;
   }
 
   .form-input {
@@ -138,6 +145,8 @@
     color: var(--text);
     outline: none;
     transition: border-color 0.2s;
+    direction: rtl;
+    text-align: right;
   }
   .form-input:focus { border-color: var(--accent); }
 
@@ -151,6 +160,7 @@
     font-weight: 600;
     cursor: pointer;
     transition: opacity 0.2s, transform 0.1s;
+    letter-spacing: 0.01em;
   }
   .btn:active { transform: scale(0.98); }
   .btn-primary { background: var(--accent); color: #fff; }
@@ -173,10 +183,11 @@
     border: 1px solid rgba(255,107,107,0.3);
     border-radius: 8px;
     padding: 10px 14px;
-    font-size: 13px;
+    font-size: 14px;
     color: var(--accent2);
     margin-bottom: 14px;
     display: none;
+    text-align: right;
   }
 
   /* ── TOP BAR ── */
@@ -198,7 +209,6 @@
     font-size: 12px;
     color: var(--accent);
     letter-spacing: 0.12em;
-    text-transform: uppercase;
   }
 
   .topbar-user {
@@ -226,13 +236,11 @@
     font-size: 10px;
     padding: 3px 8px;
     border-radius: 20px;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.04em;
   }
   .role-badge.mod { background: rgba(79,143,255,0.15); color: var(--accent); }
   .role-badge.user { background: rgba(78,203,113,0.15); color: var(--green); }
 
-  /* ── ICON BUTTON ── */
   .icon-btn {
     background: var(--card);
     border: 1px solid var(--border);
@@ -249,21 +257,19 @@
   }
   .icon-btn:hover { color: var(--text); border-color: var(--accent); }
 
-  /* ── MAIN CONTENT ── */
   .main-content {
     flex: 1;
     overflow-y: auto;
     padding: 0 0 80px;
   }
 
-  /* ── SECTION LABEL ── */
   .section-label {
     font-family: var(--mono);
-    font-size: 10px;
+    font-size: 11px;
     color: var(--muted);
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
+    letter-spacing: 0.08em;
     padding: 20px 20px 8px;
+    text-align: right;
   }
 
   /* ── WEEK NAV ── */
@@ -275,10 +281,12 @@
   }
 
   .week-label {
-    font-size: 15px;
+    font-size: 17px;
     font-weight: 600;
     text-align: center;
     flex: 1;
+    color: var(--text);
+    letter-spacing: -0.3px;
   }
 
   .week-sub {
@@ -287,7 +295,9 @@
     color: var(--sub);
     display: block;
     font-weight: 400;
-    margin-top: 2px;
+    margin-top: 3px;
+    direction: ltr;
+    letter-spacing: 0;
   }
 
   /* ── DAY LIST ── */
@@ -304,13 +314,14 @@
     display: flex;
     align-items: center;
     gap: 10px;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
   }
 
   .day-name {
-    font-family: var(--mono);
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
+    font-family: var(--sans);
+    font-size: 13px;
+    font-weight: 500;
     color: var(--sub);
   }
 
@@ -324,8 +335,8 @@
   .day-today .day-date {
     background: var(--accent);
     color: #fff;
-    width: 24px;
-    height: 24px;
+    width: 26px;
+    height: 26px;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -344,6 +355,7 @@
     cursor: pointer;
     transition: background 0.15s;
     position: relative;
+    flex-direction: row-reverse;
   }
   .event-item:last-child { border-bottom: none; }
   .event-item:hover { background: rgba(255,255,255,0.03); }
@@ -352,67 +364,72 @@
     width: 10px;
     height: 10px;
     border-radius: 50%;
-    margin-top: 4px;
+    margin-top: 5px;
     flex-shrink: 0;
   }
 
-  .event-info { flex: 1; min-width: 0; }
+  .event-info { flex: 1; min-width: 0; text-align: right; }
 
   .event-title {
-    font-size: 14px;
-    font-weight: 500;
+    font-size: 15px;
+    font-weight: 600;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    color: var(--text);
+    letter-spacing: -0.2px;
   }
 
   .event-meta {
     font-family: var(--mono);
-    font-size: 11px;
+    font-size: 12px;
     color: var(--sub);
-    margin-top: 2px;
+    margin-top: 3px;
     display: flex;
     gap: 8px;
     flex-wrap: wrap;
+    justify-content: flex-end;
+    direction: ltr;
   }
 
   .event-type-pill {
-    font-family: var(--mono);
-    font-size: 10px;
-    padding: 2px 8px;
+    font-family: var(--sans);
+    font-size: 11px;
+    font-weight: 500;
+    padding: 3px 10px;
     border-radius: 20px;
     background: rgba(255,255,255,0.07);
     color: var(--sub);
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    margin-top: 4px;
+    margin-top: 5px;
     display: inline-block;
+    letter-spacing: 0.01em;
   }
 
   .shared-badge {
-    font-family: var(--mono);
-    font-size: 10px;
+    font-family: var(--sans);
+    font-size: 11px;
     color: var(--purple);
     margin-top: 4px;
     display: flex;
     align-items: center;
     gap: 4px;
+    justify-content: flex-end;
   }
 
   .empty-day {
     background: var(--card);
-    padding: 16px;
+    padding: 18px;
     text-align: center;
-    font-size: 13px;
+    font-size: 14px;
     color: var(--muted);
-    font-family: var(--mono);
   }
 
   /* ── FAB ── */
   .fab {
     position: fixed;
     bottom: 24px;
-    right: 24px;
+    left: 24px;
+    right: auto;
     width: 52px;
     height: 52px;
     border-radius: 50%;
@@ -431,7 +448,7 @@
   .fab:active { transform: scale(0.93); }
   .fab.hidden { display: none; }
 
-  /* ── BOTTOM NAV (mod) ── */
+  /* ── BOTTOM NAV ── */
   .bottom-nav {
     position: fixed;
     bottom: 0;
@@ -455,9 +472,9 @@
     cursor: pointer;
     color: var(--muted);
     transition: color 0.2s;
-    font-family: var(--mono);
-    font-size: 10px;
-    letter-spacing: 0.04em;
+    font-family: var(--sans);
+    font-size: 11px;
+    letter-spacing: 0.01em;
     gap: 4px;
     border: none;
     background: none;
@@ -488,6 +505,7 @@
     overflow-y: auto;
     padding: 8px 0 40px;
     animation: slideUp 0.25s ease;
+    direction: rtl;
   }
 
   @keyframes slideUp {
@@ -504,11 +522,13 @@
   }
 
   .modal-title {
-    font-size: 18px;
+    font-size: 19px;
     font-weight: 600;
     padding: 0 24px 20px;
     border-bottom: 1px solid var(--border);
     margin-bottom: 20px;
+    text-align: right;
+    letter-spacing: -0.3px;
   }
 
   .modal-body { padding: 0 24px; }
@@ -525,8 +545,37 @@
     outline: none;
     appearance: none;
     transition: border-color 0.2s;
+    direction: rtl;
+    text-align: right;
   }
   .select-input:focus { border-color: var(--accent); }
+
+  /* ── TYPE SELECTOR (pill style) ── */
+  .type-selector {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 6px;
+  }
+
+  .type-pill {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 8px 16px;
+    font-family: var(--sans);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    color: var(--sub);
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .type-pill.selected {
+    background: rgba(79,143,255,0.15);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
 
   /* ── COLOR PICKER ── */
   .color-row {
@@ -548,40 +597,13 @@
   .color-swatch:active { transform: scale(0.9); }
   .color-swatch.selected { border-color: var(--text); }
 
-  /* ── USER SEARCH (mod) ── */
-  .user-list-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px 0;
-    border-bottom: 1px solid var(--border);
-    cursor: pointer;
-    transition: opacity 0.15s;
-  }
-  .user-list-item:last-child { border-bottom: none; }
-
-  .user-name { font-size: 14px; font-weight: 500; }
-  .user-email { font-size: 12px; color: var(--sub); font-family: var(--mono); }
-
   /* ── SEARCH SCREEN ── */
   .search-bar {
     display: flex;
     gap: 10px;
-    padding: 16px 20px;
+    padding: 16px 20px 8px;
+    direction: rtl;
   }
-
-  .search-input {
-    flex: 1;
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 12px 14px;
-    font-family: var(--sans);
-    font-size: 15px;
-    color: var(--text);
-    outline: none;
-  }
-  .search-input:focus { border-color: var(--accent); }
 
   .search-filters {
     display: flex;
@@ -594,13 +616,14 @@
     background: var(--card);
     border: 1px solid var(--border);
     border-radius: 20px;
-    padding: 6px 14px;
-    font-size: 12px;
-    font-family: var(--mono);
+    padding: 7px 16px;
+    font-size: 13px;
+    font-family: var(--sans);
     cursor: pointer;
     color: var(--sub);
     transition: all 0.15s;
     white-space: nowrap;
+    font-weight: 500;
   }
   .filter-chip.active {
     background: rgba(79,143,255,0.15);
@@ -616,10 +639,11 @@
     border-radius: var(--radius);
     padding: 14px 16px;
     margin-bottom: 10px;
+    text-align: right;
   }
 
-  .result-event-title { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
-  .result-users { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 6px; }
+  .result-event-title { font-size: 15px; font-weight: 600; margin-bottom: 6px; letter-spacing: -0.2px; }
+  .result-users { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 6px; justify-content: flex-end; }
 
   .user-tag {
     background: rgba(79,143,255,0.12);
@@ -628,10 +652,10 @@
     padding: 3px 10px;
     font-size: 12px;
     color: var(--accent);
-    font-family: var(--mono);
+    font-family: var(--sans);
   }
 
-  /* ── USERS MANAGEMENT ── */
+  /* ── USERS PAGE ── */
   .users-list { padding: 0 20px; }
 
   .user-card {
@@ -643,11 +667,12 @@
     display: flex;
     align-items: center;
     gap: 12px;
+    flex-direction: row-reverse;
   }
 
-  .user-card-info { flex: 1; min-width: 0; }
-
-  .user-card-actions { display: flex; gap: 8px; }
+  .user-card-info { flex: 1; min-width: 0; text-align: right; }
+  .user-name { font-size: 14px; font-weight: 600; }
+  .user-email { font-size: 12px; color: var(--sub); font-family: var(--mono); margin-top: 2px; }
 
   /* ── TOAST ── */
   #toast {
@@ -667,6 +692,7 @@
     pointer-events: none;
     white-space: nowrap;
     max-width: 340px;
+    text-align: center;
   }
   #toast.show {
     opacity: 1;
@@ -675,7 +701,6 @@
   #toast.success { border-color: rgba(78,203,113,0.4); color: var(--green); }
   #toast.error   { border-color: rgba(255,107,107,0.4); color: var(--accent2); }
 
-  /* ── LOADING ── */
   .spinner {
     width: 36px;
     height: 36px;
@@ -689,7 +714,7 @@
 
   .loading-wrap { display: flex; justify-content: center; padding: 40px; }
 
-  /* ── PROFILE (settings) ── */
+  /* ── PROFILE ── */
   .profile-section {
     margin: 20px 20px 0;
     background: var(--card);
@@ -704,15 +729,16 @@
     justify-content: space-between;
     padding: 16px;
     border-bottom: 1px solid var(--border);
+    flex-direction: row-reverse;
   }
   .profile-row:last-child { border-bottom: none; }
 
-  .profile-row-label { font-size: 14px; color: var(--sub); font-family: var(--mono); font-size: 12px; }
-  .profile-row-value { font-size: 14px; font-weight: 500; }
+  .profile-row-label { font-size: 12px; color: var(--sub); font-family: var(--mono); }
+  .profile-row-value { font-size: 15px; font-weight: 500; }
 
   /* ── EVENT DETAIL ── */
   .event-detail-color-bar {
-    height: 6px;
+    height: 5px;
     border-radius: 3px;
     margin-bottom: 20px;
   }
@@ -722,14 +748,15 @@
     align-items: flex-start;
     gap: 14px;
     margin-bottom: 16px;
+    flex-direction: row-reverse;
   }
 
   .detail-icon { color: var(--sub); flex-shrink: 0; margin-top: 2px; }
-  .detail-label { font-family: var(--mono); font-size: 11px; color: var(--sub); margin-bottom: 2px; text-transform: uppercase; letter-spacing: 0.06em; }
-  .detail-value { font-size: 14px; }
+  .detail-label { font-size: 11px; color: var(--sub); margin-bottom: 3px; font-family: var(--mono); letter-spacing: 0.04em; text-align: right; }
+  .detail-value { font-size: 15px; font-weight: 500; text-align: right; }
 
   /* ── CHECKBOX ── */
-  .checkbox-list { display: flex; flex-direction: column; gap: 8px; max-height: 200px; overflow-y: auto; }
+  .checkbox-list { display: flex; flex-direction: column; gap: 8px; max-height: 220px; overflow-y: auto; }
   .checkbox-item {
     display: flex;
     align-items: center;
@@ -739,14 +766,33 @@
     border: 1px solid var(--border);
     border-radius: 8px;
     cursor: pointer;
+    flex-direction: row-reverse;
   }
-  .checkbox-item input[type=checkbox] { accent-color: var(--accent); width: 16px; height: 16px; cursor: pointer; }
+  .checkbox-item input[type=checkbox] { accent-color: var(--accent); width: 16px; height: 16px; cursor: pointer; flex-shrink: 0; }
+  .checkbox-item .cb-info { flex: 1; text-align: right; }
 
   /* ── DATE TIME ROW ── */
   .dt-row { display: flex; gap: 10px; }
   .dt-row .form-group { flex: 1; }
 
-  /* responsive */
+  /* Date/time inputs LTR for readability */
+  input[type=date], input[type=time] {
+    direction: ltr;
+    text-align: left;
+  }
+
+  /* Search date/time inputs */
+  #search-date, #search-time {
+    direction: ltr;
+    text-align: left;
+  }
+
+  /* Search type select RTL */
+  #search-type {
+    direction: rtl;
+    text-align: right;
+  }
+
   @media (max-width: 360px) {
     .modal-body { padding: 0 16px; }
   }
@@ -754,39 +800,35 @@
 </head>
 <body>
 
-<!-- ════════════════════════════════════════════════════════════
-     AUTH SCREEN
-════════════════════════════════════════════════════════════ -->
+<!-- AUTH SCREEN -->
 <div id="screen-auth" class="screen active">
-  <div style="text-align:center; margin-bottom: 10px;">
-    <!-- <div class="auth-logo"></div> -->
-    <div class="auth-title">לוז<br>חמלים</div>
+  <div style="text-align:center; margin-bottom: 16px;">
+    <div style="font-size:36px; font-weight:700; color:var(--text); line-height:1.2; margin-bottom:8px;">לוז חמלים</div>
+    <div style="font-size:14px; color:var(--sub);">ברוכים הבאים</div>
   </div>
   <div class="auth-card">
     <div class="auth-error" id="auth-error"></div>
     <div class="form-group">
-      <label class="form-label">שפ משתמש</label>
-      <input class="form-input" type="text" id="auth-username" placeholder="שם שלך" autocomplete="username">
+      <label class="form-label">שם משתמש</label>
+      <!-- Auth inputs intentionally LTR for username/password -->
+      <input class="form-input" type="text" id="auth-username" placeholder="שם המשתמש שלך" autocomplete="username" style="direction:ltr;text-align:left;">
     </div>
     <div class="form-group">
       <label class="form-label">סיסמה</label>
-      <input class="form-input" type="password" id="auth-password" placeholder="••••••••" autocomplete="current-password">
+      <input class="form-input" type="password" id="auth-password" placeholder="••••••••" autocomplete="current-password" style="direction:ltr;text-align:left;">
     </div>
     <button class="btn btn-primary" id="btn-login">כניסה</button>
-    <div style="text-align:center; margin-top: 20px; font-size:12px; color:var(--muted); font-family:var(--mono);">
-      יש ליצור קשר עם מר׳ רומן רודוי ליצירת משתמש
+    <div style="text-align:center; margin-top: 20px; font-size:13px; color:var(--muted);">
+      ליצירת משתמש יש ליצור קשר עם מנהל המערכת
     </div>
   </div>
 </div>
 
-<!-- ════════════════════════════════════════════════════════════
-     MAIN APP
-════════════════════════════════════════════════════════════ -->
+<!-- MAIN APP -->
 <div id="screen-app" class="screen">
 
   <!-- TOP BAR -->
   <div class="topbar">
-    <div class="topbar-logo">-_-</div>
     <div class="topbar-user">
       <span id="topbar-role-badge" class="role-badge"></span>
       <div class="avatar" id="topbar-avatar">?</div>
@@ -796,54 +838,51 @@
         </svg>
       </button>
     </div>
+    <div class="topbar-logo">-_-</div>
   </div>
 
-  <!-- PAGES -->
   <div class="main-content">
 
-    <!-- ── SCHEDULE PAGE ── -->
+    <!-- SCHEDULE PAGE -->
     <div id="page-schedule" class="page">
       <div class="week-nav">
-        <button class="icon-btn" id="btn-week-prev">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
-        </button>
-        <div class="week-label-wrap" style="flex:1;text-align:center;">
-          <div class="week-label" id="week-label">ההשבוע הנוכחי</div>
-          <span class="week-sub" id="week-sub"></span>
-        </div>
         <button class="icon-btn" id="btn-week-next">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+        <div style="flex:1;text-align:center;">
+          <div class="week-label" id="week-label">הלוז שלי</div>
+          <span class="week-sub" id="week-sub"></span>
+        </div>
+        <button class="icon-btn" id="btn-week-prev">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
         </button>
       </div>
       <div id="schedule-container"></div>
     </div>
 
-    <!-- ── SEARCH PAGE (mod only) ── -->
+    <!-- SEARCH PAGE (mod only) -->
     <div id="page-search" class="page" style="display:none">
       <div class="section-label">חיפוש אירועים</div>
       <div class="search-bar">
-        <input class="search-input" id="search-time" type="time" placeholder="Time">
-        <select class="form-input" id="search-type" style="max-width:130px">
-          <option value="">כל הסוגים</option>
-        </select>
+        <input class="form-input" id="search-date" type="date" style="flex:1;direction:ltr;text-align:left;">
+        <input class="form-input" id="search-time" type="time" style="width:110px;direction:ltr;text-align:left;">
       </div>
-      <div style="padding: 0 20px 8px; display:flex; gap:8px; align-items:center;">
-        <input class="form-input" id="search-date" type="date" style="flex:1">
-        <button class="btn btn-primary btn-sm" id="btn-do-search">Search</button>
+      <div style="padding: 0 20px 12px; display:flex; gap:8px; align-items:center; flex-wrap:wrap; justify-content:flex-end;">
+        <button class="btn btn-primary btn-sm" id="btn-do-search">חפש</button>
       </div>
+      <div style="padding: 0 20px 12px; display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end;" id="search-type-filters"></div>
       <div class="results-section" id="search-results"></div>
     </div>
 
-    <!-- ── USERS PAGE (mod only) ── -->
+    <!-- USERS PAGE (mod only) -->
     <div id="page-users" class="page" style="display:none">
-      <div style="display:flex; align-items:center; justify-content:space-between; padding: 16px 20px 8px;">
-        <div class="section-label" style="padding:0">Users</div>
-        <button class="btn btn-primary btn-sm" id="btn-add-user">+ Add User</button>
+      <div style="padding: 16px 20px 8px;">
+        <div class="section-label" style="padding:0 0 8px">משתמשים</div>
       </div>
       <div class="users-list" id="users-list"></div>
     </div>
 
-    <!-- ── PROFILE PAGE ── -->
+    <!-- PROFILE PAGE -->
     <div id="page-profile" class="page" style="display:none">
       <div class="section-label">הפרופיל שלי</div>
       <div class="profile-section">
@@ -865,7 +904,7 @@
       </div>
     </div>
 
-  </div><!-- /main-content -->
+  </div>
 
   <!-- BOTTOM NAV -->
   <nav class="bottom-nav" id="bottom-nav">
@@ -900,11 +939,9 @@
   <!-- FAB (mod only) -->
   <button class="fab mod-only hidden" id="fab">+</button>
 
-</div><!-- /screen-app -->
+</div>
 
-<!-- ════════════════════════════════════════════════════════════
-     MODALS
-════════════════════════════════════════════════════════════ -->
+<!-- ════════════════ MODALS ════════════════ -->
 
 <!-- Event Form Modal -->
 <div class="modal-overlay" id="modal-event">
@@ -914,17 +951,15 @@
     <div class="modal-body">
       <div class="form-group">
         <label class="form-label">כותרת</label>
-        <input class="form-input" id="ev-title" placeholder="Event title">
+        <input class="form-input" id="ev-title" placeholder="שם האירוע">
       </div>
       <div class="form-group">
-        <label class="form-label">סוג</label>
-        <div style="display:flex; gap:8px;">
-          <input class="form-input" id="ev-type" placeholder="e.g. travel, meeting, shift…" style="flex:1">
-        </div>
+        <label class="form-label">סוג אירוע</label>
+        <div class="type-selector" id="ev-type-selector"></div>
       </div>
       <div class="dt-row">
         <div class="form-group">
-          <label class="form-label">תאריך ההתחלה</label>
+          <label class="form-label">תאריך התחלה</label>
           <input class="form-input" type="date" id="ev-date">
         </div>
         <div class="form-group">
@@ -934,11 +969,11 @@
       </div>
       <div class="dt-row">
         <div class="form-group">
-          <label class="form-label">תאריך הסיום</label>
+          <label class="form-label">תאריך סיום</label>
           <input class="form-input" type="date" id="ev-date-end">
         </div>
         <div class="form-group">
-          <label class="form-label">שעת הסוף</label>
+          <label class="form-label">שעת סיום</label>
           <input class="form-input" type="time" id="ev-time-end">
         </div>
       </div>
@@ -959,11 +994,11 @@
   </div>
 </div>
 
-<!-- Event Detail Modal (user view) -->
+<!-- Event Detail Modal -->
 <div class="modal-overlay" id="modal-event-detail">
   <div class="modal-sheet">
     <div class="modal-handle"></div>
-    <div class="modal-title" id="detail-title">אירועים</div>
+    <div class="modal-title" id="detail-title">אירוע</div>
     <div class="modal-body">
       <div class="event-detail-color-bar" id="detail-color-bar"></div>
       <div class="detail-row">
@@ -971,8 +1006,8 @@
           <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/>
           <line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
         </svg>
-        <div>
-          <div class="detail-label">תאריך & שעה</div>
+        <div style="flex:1;text-align:right;">
+          <div class="detail-label">תאריך ושעה</div>
           <div class="detail-value" id="detail-datetime">—</div>
         </div>
       </div>
@@ -981,7 +1016,7 @@
           <path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/>
           <line x1="7" y1="7" x2="7.01" y2="7"/>
         </svg>
-        <div>
+        <div style="flex:1;text-align:right;">
           <div class="detail-label">סוג</div>
           <div class="detail-value" id="detail-type">—</div>
         </div>
@@ -991,7 +1026,7 @@
           <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/>
           <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>
         </svg>
-        <div>
+        <div style="flex:1;text-align:right;">
           <div class="detail-label">משותף עם</div>
           <div class="detail-value result-users" id="detail-shared-users"></div>
         </div>
@@ -1003,81 +1038,35 @@
   </div>
 </div>
 
-<!-- Add User Modal (mod) -->
-<div class="modal-overlay" id="modal-add-user">
-  <div class="modal-sheet">
-    <div class="modal-handle"></div>
-    <div class="modal-title">Add User</div>
-    <div class="modal-body">
-      <div class="auth-error" id="add-user-error"></div>
-      <div class="form-group">
-        <label class="form-label">Full Name</label>
-        <input class="form-input" id="new-user-name" placeholder="Jane Doe">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Username <span style="color:var(--sub);font-size:10px;">(for login)</span></label>
-        <input class="form-input" id="new-user-username" placeholder="jane_doe">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Email <span style="color:var(--sub);font-size:10px;">(hidden from users)</span></label>
-        <input class="form-input" type="email" id="new-user-email" placeholder="jane@example.com">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Password</label>
-        <input class="form-input" type="password" id="new-user-pass" placeholder="min 6 chars">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Role</label>
-        <select class="select-input" id="new-user-role">
-          <option value="user">User</option>
-          <option value="moderator">Moderator</option>
-        </select>
-      </div>
-      <div style="display:flex; gap:10px; margin-top:20px; padding-bottom:4px;">
-        <button class="btn btn-ghost" id="btn-cancel-add-user" style="flex:1">Cancel</button>
-        <button class="btn btn-primary" id="btn-confirm-add-user" style="flex:1">Create</button>
-      </div>
-    </div>
-  </div>
-</div>
-
 <!-- Toast -->
 <div id="toast"></div>
 
-<!-- ════════════════════════════════════════════════════════════
-     APP LOGIC
-════════════════════════════════════════════════════════════ -->
+<!-- ════════════════ APP LOGIC ════════════════ -->
 <script>
-// ── Wait for Firebase to load ──────────────────────────────
 function waitForFirebase(cb) {
   if (window.__fb) return cb();
   setTimeout(() => waitForFirebase(cb), 100);
 }
 
-// ── CONSTANTS ─────────────────────────────────────────────
 const COLORS = ['#4f8fff','#ff6b6b','#4ecb71','#f5c542','#a78bfa','#fb923c','#f472b6','#22d3ee','#e879f9','#94a3b8'];
 const EVENT_TYPES = ['משמרת','זירות','תורנות','שיעור'];
 
-// ── STATE ─────────────────────────────────────────────────
-let currentUser = null;
-let userProfile = null;  // from Firestore
-let allUsers    = [];    // moderator cache
-let currentWeekOffset = 0;  // weeks from current week
-let editingEventId = null;
-let selectedColor = COLORS[0];
+let currentUser     = null;
+let userProfile     = null;
+let allUsers        = [];
+let currentWeekOffset = 0;
+let editingEventId  = null;
+let selectedColor   = COLORS[0];
 let selectedUserIds = new Set();
+let selectedType    = EVENT_TYPES[0];
 
-// ── UTILS ─────────────────────────────────────────────────
+// ── UTILS ──────────────────────────────────
 function toast(msg, type='success') {
   const el = document.getElementById('toast');
   el.textContent = msg;
   el.className = `show ${type}`;
   clearTimeout(el._t);
   el._t = setTimeout(() => el.className = '', 2800);
-}
-
-function formatDate(d) {
-  return d.toLocaleDateString('en-US', { weekday:'short', month:'short', day:'numeric' });
 }
 
 function localDateStr(date) {
@@ -1087,22 +1076,19 @@ function localDateStr(date) {
   return `${y}-${m}-${d}`;
 }
 
-function formatTime(dateStr, timeStr) {
+function formatTime(timeStr) {
   if (!timeStr) return '—';
-  // Simply return HH:MM directly — already in 24h format
   return timeStr.slice(0,5);
 }
 
-// Get Sunday of the week containing 'date'
 function getWeekStart(date) {
   const d = new Date(date);
   d.setHours(0,0,0,0);
-  const day = d.getDay(); // 0=Sun, 6=Sat
+  const day = d.getDay();
   d.setDate(d.getDate() - day);
   return d;
 }
 
-// ── WEEK RANGE ────────────────────────────────────────────
 function getWeekDates(offset) {
   const today = new Date();
   const sunday = getWeekStart(today);
@@ -1120,7 +1106,6 @@ function isModerator() {
   return userProfile && userProfile.role === 'moderator';
 }
 
-// ── SCREENS ───────────────────────────────────────────────
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
@@ -1135,9 +1120,10 @@ function showPage(name) {
   if (name === 'schedule') renderSchedule();
   if (name === 'users' && isModerator()) loadUsers();
   if (name === 'profile') renderProfile();
+  if (name === 'search') buildSearchTypeFilters();
 }
 
-// ── AUTH ──────────────────────────────────────────────────
+// ── AUTH ───────────────────────────────────
 waitForFirebase(() => {
   const { auth, onAuthStateChanged } = window.__fb;
 
@@ -1165,13 +1151,12 @@ waitForFirebase(() => {
       return;
     }
     try {
-      // Look up email by username in Firestore
       const { db, collection, query, where, getDocs } = window.__fb;
       const q = query(collection(db, 'users'), where('username', '==', username));
       const snap = await getDocs(q);
       if (snap.empty) throw new Error('משתמש לא נמצא');
       const userData = snap.docs[0].data();
-      if (!userData.email) throw new Error('Account has no email configured');
+      if (!userData.email) throw new Error('אין כתובת מייל מוגדרת לחשבון זה');
       await window.__fb.signInWithEmailAndPassword(auth, userData.email, pass);
     } catch(e) {
       errEl.textContent = e.message === 'Firebase: Error (auth/invalid-credential).'
@@ -1181,7 +1166,6 @@ waitForFirebase(() => {
     }
   });
 
-  // logout buttons
   ['btn-logout','btn-logout-profile'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.addEventListener('click', () => window.__fb.signOut(auth));
@@ -1194,97 +1178,66 @@ async function loadUserProfile(uid) {
   if (snap.exists()) {
     userProfile = { id: uid, ...snap.data() };
   } else {
-    // create minimal profile from auth
     userProfile = { id: uid, name: currentUser.email, email: currentUser.email, role: 'user' };
     await window.__fb.setDoc(doc(db, 'users', uid), userProfile);
   }
 }
 
-// ── INIT ──────────────────────────────────────────────────
+// ── INIT ───────────────────────────────────
 function initApp() {
-  // Badge
-  const badge = document.getElementById('topbar-role-badge');
   const isMod = isModerator();
+
+  const badge = document.getElementById('topbar-role-badge');
   badge.textContent = isMod ? 'Mod' : 'User';
   badge.className = `role-badge ${isMod ? 'mod' : 'user'}`;
 
-  // Avatar
   document.getElementById('topbar-avatar').textContent =
     (userProfile.name || 'U').charAt(0).toUpperCase();
 
-  // Show/hide mod elements
   document.querySelectorAll('.mod-only').forEach(el => {
     if (isMod) el.classList.remove('hidden');
     else el.classList.add('hidden');
   });
 
-  // For regular users: hide bottom nav completely
   if (!isMod) {
     document.getElementById('bottom-nav').style.display = 'none';
-    // Also reduce bottom padding since no nav bar
     document.querySelector('.main-content').style.paddingBottom = '20px';
   }
 
-  // Nav
   document.querySelectorAll('.nav-item').forEach(btn => {
     btn.addEventListener('click', () => showPage(btn.dataset.page));
   });
 
-  // Color picker
   buildColorPicker();
 
-  // Type options for search
-  buildTypeOptions();
-
-  // FAB
   document.getElementById('fab').addEventListener('click', () => openEventModal(null));
 
-  // Week nav
+  // Week nav — RTL: "next" button goes forward (right side = next week in LTR, but in RTL left = next)
   document.getElementById('btn-week-prev').addEventListener('click', () => {
     currentWeekOffset--;
     renderSchedule();
   });
   document.getElementById('btn-week-next').addEventListener('click', () => {
-    // Limit: users can only see current week; mods can go 2 weeks ahead
-    const maxOffset = isModerator() ? 2 : 1;
+    const maxOffset = isModerator() ? 4 : 1;
     if (currentWeekOffset >= maxOffset) {
-      toast('You can\'t view beyond the allowed range', 'error');
+      toast('לא ניתן לצפות בלוז כה רחוק', 'error');
       return;
     }
     currentWeekOffset++;
     renderSchedule();
   });
 
-  // Event modal
   document.getElementById('btn-cancel-event').addEventListener('click', closeEventModal);
   document.getElementById('btn-save-event').addEventListener('click', saveEvent);
-
-  // Detail modal
   document.getElementById('btn-close-detail').addEventListener('click', () => {
     document.getElementById('modal-event-detail').classList.remove('open');
   });
-
-  // Search
   document.getElementById('btn-do-search').addEventListener('click', doSearch);
-
-  // Add user
-  document.getElementById('btn-add-user').addEventListener('click', () => {
-    document.getElementById('add-user-error').style.display = 'none';
-    document.getElementById('new-user-name').value = '';
-    document.getElementById('new-user-username').value = '';
-    document.getElementById('new-user-email').value = '';
-    document.getElementById('new-user-pass').value = '';
-    document.getElementById('modal-add-user').classList.add('open');
-  });
-  document.getElementById('btn-cancel-add-user').addEventListener('click', () => {
-    document.getElementById('modal-add-user').classList.remove('open');
-  });
-  document.getElementById('btn-confirm-add-user').addEventListener('click', createUser);
 
   showPage('schedule');
 }
 
-// ── COLOR PICKER ──────────────────────────────────────────
+// ── COLOR PICKER ───────────────────────────
 function buildColorPicker() {
   const container = document.getElementById('color-picker');
   container.innerHTML = '';
@@ -1302,36 +1255,63 @@ function buildColorPicker() {
   });
 }
 
-function buildTypeOptions() {
-  const sel = document.getElementById('search-type');
+// ── TYPE PILL SELECTOR ─────────────────────
+function buildTypePills(containerId, currentType, onSelect) {
+  const container = document.getElementById(containerId);
+  container.innerHTML = '';
   EVENT_TYPES.forEach(t => {
-    const opt = document.createElement('option');
-    opt.value = t; opt.textContent = t;
-    sel.appendChild(opt);
+    const pill = document.createElement('button');
+    pill.className = 'type-pill' + (t === currentType ? ' selected' : '');
+    pill.textContent = t;
+    pill.addEventListener('click', () => {
+      onSelect(t);
+      container.querySelectorAll('.type-pill').forEach(p => p.classList.remove('selected'));
+      pill.classList.add('selected');
+    });
+    container.appendChild(pill);
   });
 }
 
-// ── TIME DISPLAY HELPER ───────────────────────────────────
+// ── SEARCH TYPE FILTERS ────────────────────
+let searchTypeFilter = '';
+
+function buildSearchTypeFilters() {
+  const container = document.getElementById('search-type-filters');
+  container.innerHTML = '';
+
+  const allChip = document.createElement('button');
+  allChip.className = 'filter-chip' + (searchTypeFilter === '' ? ' active' : '');
+  allChip.textContent = 'הכל';
+  allChip.addEventListener('click', () => {
+    searchTypeFilter = '';
+    buildSearchTypeFilters();
+  });
+  container.appendChild(allChip);
+
+  EVENT_TYPES.forEach(t => {
+    const chip = document.createElement('button');
+    chip.className = 'filter-chip' + (searchTypeFilter === t ? ' active' : '');
+    chip.textContent = t;
+    chip.addEventListener('click', () => {
+      searchTypeFilter = t;
+      buildSearchTypeFilters();
+    });
+    container.appendChild(chip);
+  });
+}
+
+// ── TIME DISPLAY ───────────────────────────
 function getEventTimeDisplay(ev, currentDateStr) {
   const isMultiDay = ev.dateEnd && ev.dateEnd !== ev.date;
   if (!isMultiDay) {
-    // Single day
-    return ev.time ? (ev.timeEnd ? `${formatTime(null,ev.time)} – ${formatTime(null,ev.timeEnd)}` : formatTime(null,ev.time)) : '—';
+    return ev.time ? (ev.timeEnd ? `${formatTime(ev.time)} – ${formatTime(ev.timeEnd)}` : formatTime(ev.time)) : '—';
   }
-  // Multi-day: show split
-  if (currentDateStr === ev.date) {
-    // First day: start time – 23:59
-    return `${formatTime(null,ev.time)} – 23:59`;
-  } else if (currentDateStr === ev.dateEnd) {
-    // Last day: 00:00 – end time
-    return `00:00 – ${formatTime(null,ev.timeEnd)}`;
-  } else {
-    // Middle day: all day
-    return '00:00 – 23:59';
-  }
+  if (currentDateStr === ev.date) return `${formatTime(ev.time)} – 23:59`;
+  else if (currentDateStr === ev.dateEnd) return `00:00 – ${formatTime(ev.timeEnd)}`;
+  else return '00:00 – 23:59';
 }
 
-// ── SCHEDULE ──────────────────────────────────────────────
+// ── SCHEDULE ───────────────────────────────
 async function renderSchedule() {
   const container = document.getElementById('schedule-container');
   if (!container) return;
@@ -1340,28 +1320,17 @@ async function renderSchedule() {
   const days = getWeekDates(currentWeekOffset);
   const today = new Date(); today.setHours(0,0,0,0);
 
-  // Week label
   const wStart = days[0], wEnd = days[6];
   const opts = { month:'short', day:'numeric' };
+  const weekSubEl = document.getElementById('week-sub');
   const weekLabelEl = document.getElementById('week-label');
-  const weekSubEl   = document.getElementById('week-sub');
 
   if (weekSubEl) weekSubEl.textContent =
     `${wStart.toLocaleDateString('en-US', opts)} – ${wEnd.toLocaleDateString('en-US', opts)}`;
 
-  if (weekLabelEl) {
-    if (currentWeekOffset < 0) {
-      weekLabelEl.textContent = 'שבוע שעבר';
-    } else if (currentWeekOffset > 14) {
-      weekLabelEl.textContent = `+${currentWeekOffset} שבוע{currentWeekOffset>1?'s':''}`;
-    } else if (currentWeekOffset > 7) {
-      weekLabelEl.textContent = 'שבוע הבא';
-    } else {
-      weekLabelEl.textContent = 'השבוע הנוכחי';
-    }
-  }
+  // Always show "הלוז שלי"
+  if (weekLabelEl) weekLabelEl.textContent = 'הלוז שלי';
 
-  // Fetch events
   const dateStrings = days.map(d => localDateStr(d));
   let events = [];
   try {
@@ -1371,16 +1340,15 @@ async function renderSchedule() {
     return;
   }
 
-  // Cache all users once for moderator
   if (isModerator() && allUsers.length === 0) await loadUsers();
 
-  // Build HTML
   container.innerHTML = '';
+  const dayNames = ['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
+
   days.forEach(day => {
     const dateStr = localDateStr(day);
     const dayEvents = events.filter(e => {
-      const start = e.date;
-      const end   = e.dateEnd || e.date;
+      const start = e.date, end = e.dateEnd || e.date;
       return dateStr >= start && dateStr <= end;
     }).sort((a,b) => (a.time||'').localeCompare(b.time||''));
 
@@ -1389,10 +1357,9 @@ async function renderSchedule() {
     const block = document.createElement('div');
     block.className = 'day-block' + (isToday ? ' day-today' : '');
 
-    const dayNames = ['א׳','ב׳','ג׳','ד׳','ה׳','ו׳','ש׳'];
     block.innerHTML = `
       <div class="day-header">
-        <span class="day-name">${dayNames[day.getDay()]}</span>
+        <span class="day-name">יום ${dayNames[day.getDay()]}</span>
         <span class="day-date">${day.getDate()}</span>
       </div>
       <div class="events-list" id="day-${dateStr}"></div>
@@ -1401,26 +1368,24 @@ async function renderSchedule() {
     const list = block.querySelector(`#day-${dateStr}`);
 
     if (dayEvents.length === 0) {
-      list.innerHTML = '<div class="empty-day">איו אירועים -_-</div>';
+      list.innerHTML = '<div class="empty-day">אין אירועים</div>';
     } else {
       dayEvents.forEach(ev => {
         const item = document.createElement('div');
         item.className = 'event-item';
-
-        // Is this a shared event (multiple userIds)?
         const isShared = ev.userIds && ev.userIds.length > 1;
 
         item.innerHTML = `
-          <div class="event-color-dot" style="background:${ev.color||'#4f8fff'}"></div>
+          ${isModerator() ? '<svg style="color:var(--muted);flex-shrink:0;margin-top:4px" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>' : ''}
           <div class="event-info">
             <div class="event-title">${ev.title}</div>
             <div class="event-meta">
               <span>${getEventTimeDisplay(ev, dateStr)}</span>
             </div>
-            <span class="event-type-pill">${ev.type||'event'}</span>
-            ${isShared ? '<div class="shared-badge"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg> Shared event</div>' : ''}
+            <span class="event-type-pill">${ev.type || 'אירוע'}</span>
+            ${isShared ? '<div class="shared-badge"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg> אירוע משותף</div>' : ''}
           </div>
-          ${isModerator() ? '<svg style="color:var(--muted);flex-shrink:0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>' : ''}
+          <div class="event-color-dot" style="background:${ev.color||'#4f8fff'}"></div>
         `;
 
         item.addEventListener('click', () => {
@@ -1438,13 +1403,10 @@ async function renderSchedule() {
 
 async function fetchEventsForDates(dateStrings) {
   const { db, collection, query, where, getDocs } = window.__fb;
-
-  // Build date range query
   const first = dateStrings[0], last = dateStrings[dateStrings.length-1];
 
   let q;
   if (isModerator()) {
-    // Fetch events that start within the week OR end within the week
     q = query(collection(db,'events'), where('date','<=',last), where('date','>=',first));
   } else {
     q = query(collection(db,'events'),
@@ -1458,31 +1420,29 @@ async function fetchEventsForDates(dateStrings) {
   return snap.docs.map(d => ({ id: d.id, ...d.data() }));
 }
 
-// ── EVENT MODAL (mod) ──────────────────────────────────────
+// ── EVENT MODAL ────────────────────────────
 async function openEventModal(event) {
   editingEventId = event ? event.id : null;
 
-  document.getElementById('modal-event-title').textContent = event ? 'Edit Event' : 'New Event';
-  document.getElementById('ev-title').value = event?.title || '';
-  document.getElementById('ev-type').value  = event?.type  || '';
-  document.getElementById('ev-date').value      = event?.date    || localDateStr(new Date());
-  document.getElementById('ev-date-end').value  = event?.dateEnd || event?.date || localDateStr(new Date());
-  document.getElementById('ev-time').value      = event?.time    || '09:00';
-  document.getElementById('ev-time-end').value  = event?.timeEnd || '10:00';
+  document.getElementById('modal-event-title').textContent = event ? 'עריכת אירוע' : 'אירוע חדש';
+  document.getElementById('ev-title').value      = event?.title   || '';
+  document.getElementById('ev-date').value       = event?.date    || localDateStr(new Date());
+  document.getElementById('ev-date-end').value   = event?.dateEnd || event?.date || localDateStr(new Date());
+  document.getElementById('ev-time').value       = event?.time    || '09:00';
+  document.getElementById('ev-time-end').value   = event?.timeEnd || '10:00';
 
+  selectedType  = event?.type  || EVENT_TYPES[0];
   selectedColor = event?.color || COLORS[0];
   buildColorPicker();
+  buildTypePills('ev-type-selector', selectedType, (t) => { selectedType = t; });
 
   selectedUserIds = new Set(event?.userIds || [currentUser.uid]);
-
-  // Load users for checkboxes
   if (allUsers.length === 0) await loadUsers();
   buildUserCheckboxes();
 
-  // Delete button
   const delWrap = document.getElementById('ev-delete-wrap');
   if (event) {
-    delWrap.innerHTML = '<button class="btn btn-danger" id="btn-delete-event">Delete Event</button>';
+    delWrap.innerHTML = '<button class="btn btn-danger" id="btn-delete-event">מחק אירוע</button>';
     document.getElementById('btn-delete-event').addEventListener('click', deleteEvent);
   } else {
     delWrap.innerHTML = '';
@@ -1499,8 +1459,8 @@ function buildUserCheckboxes() {
     item.className = 'checkbox-item';
     item.innerHTML = `
       <input type="checkbox" value="${u.id}" ${selectedUserIds.has(u.id)?'checked':''}>
-      <div>
-        <div style="font-size:14px;font-weight:500">${u.name}</div>
+      <div class="cb-info">
+        <div style="font-size:14px;font-weight:600">${u.name}</div>
         <div style="font-size:12px;color:var(--sub);font-family:var(--mono)">${u.email}</div>
       </div>
     `;
@@ -1519,20 +1479,18 @@ function closeEventModal() {
 
 async function saveEvent() {
   const title = document.getElementById('ev-title').value.trim();
-  const type  = document.getElementById('ev-type').value.trim();
   const date  = document.getElementById('ev-date').value;
-  const time  = document.getElementById('ev-time').value;
 
-  if (!title || !date) return toast('Please fill in title and date', 'error');
+  if (!title || !date) return toast('יש להכניס כותרת ותאריך', 'error');
 
-  const { db, collection, doc, setDoc, addDoc, updateDoc } = window.__fb;
+  const { db, collection, doc, addDoc, updateDoc } = window.__fb;
 
   const payload = {
     title,
-    type: type || 'event',
+    type: selectedType,
     date,
     dateEnd: document.getElementById('ev-date-end').value || date,
-    time,
+    time: document.getElementById('ev-time').value,
     timeEnd: document.getElementById('ev-time-end').value || '',
     color: selectedColor,
     userIds: Array.from(selectedUserIds),
@@ -1543,10 +1501,10 @@ async function saveEvent() {
   try {
     if (editingEventId) {
       await updateDoc(doc(db,'events',editingEventId), payload);
-      toast('Event updated');
+      toast('האירוע עודכן');
     } else {
       await addDoc(collection(db,'events'), { ...payload, createdAt: Date.now() });
-      toast('Event created');
+      toast('האירוע נוסף');
     }
     closeEventModal();
     renderSchedule();
@@ -1557,31 +1515,34 @@ async function saveEvent() {
 
 async function deleteEvent() {
   if (!editingEventId) return;
-  if (!confirm('Delete this event?')) return;
+  if (!confirm('למחוק את האירוע?')) return;
   const { db, doc, deleteDoc } = window.__fb;
   await deleteDoc(doc(db,'events',editingEventId));
   closeEventModal();
   renderSchedule();
-  toast('Event deleted');
+  toast('האירוע נמחק');
 }
 
-// ── EVENT DETAIL (user) ────────────────────────────────────
+// ── EVENT DETAIL ───────────────────────────
 async function openEventDetail(ev) {
   if (allUsers.length === 0) await loadUsers();
+
   document.getElementById('detail-title').textContent = ev.title;
   document.getElementById('detail-color-bar').style.background = ev.color || '#4f8fff';
-  const startLabel = new Date(ev.date+'T00:00').toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+
+  const startLabel = new Date(ev.date+'T00:00').toLocaleDateString('he-IL',{weekday:'short',month:'short',day:'numeric'});
   const endLabel   = (ev.dateEnd && ev.dateEnd !== ev.date)
-    ? new Date(ev.dateEnd+'T00:00').toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'})
+    ? new Date(ev.dateEnd+'T00:00').toLocaleDateString('he-IL',{weekday:'short',month:'short',day:'numeric'})
     : null;
   const dateRange  = endLabel ? `${startLabel} – ${endLabel}` : startLabel;
   const timeRange  = ev.timeEnd
-    ? `${formatTime(null,ev.time)} – ${formatTime(null,ev.timeEnd)}`
-    : formatTime(null,ev.time);
-  document.getElementById('detail-datetime').textContent = `${dateRange} · ${timeRange}`;
-  document.getElementById('detail-type').textContent = ev.type || 'event';
+    ? `${formatTime(ev.time)} – ${formatTime(ev.timeEnd)}`
+    : formatTime(ev.time);
 
-  const sharedRow = document.getElementById('detail-shared-row');
+  document.getElementById('detail-datetime').textContent = `${dateRange} · ${timeRange}`;
+  document.getElementById('detail-type').textContent = ev.type || 'אירוע';
+
+  const sharedRow   = document.getElementById('detail-shared-row');
   const sharedUsers = document.getElementById('detail-shared-users');
   sharedUsers.innerHTML = '';
 
@@ -1591,7 +1552,7 @@ async function openEventDetail(ev) {
       const tag = document.createElement('span');
       tag.className = 'user-tag';
       const u = allUsers.find(u => u.id === uid);
-      tag.textContent = uid === currentUser.uid ? 'You' : (u ? u.name : uid.slice(0,8)+'…');
+      tag.textContent = uid === currentUser.uid ? 'אתה' : (u ? u.name : uid.slice(0,8)+'…');
       sharedUsers.appendChild(tag);
     });
   } else {
@@ -1601,7 +1562,7 @@ async function openEventDetail(ev) {
   document.getElementById('modal-event-detail').classList.add('open');
 }
 
-// ── USERS ─────────────────────────────────────────────────
+// ── USERS ──────────────────────────────────
 async function loadUsers() {
   const { db, collection, getDocs } = window.__fb;
   const snap = await getDocs(collection(db,'users'));
@@ -1614,75 +1575,25 @@ async function loadUsers() {
     const card = document.createElement('div');
     card.className = 'user-card';
     card.innerHTML = `
-      <div class="avatar">${(u.name||'U').charAt(0).toUpperCase()}</div>
+      <span class="role-badge ${u.role==='moderator'?'mod':'user'}">${u.role==='moderator'?'Mod':'User'}</span>
       <div class="user-card-info">
         <div class="user-name">${u.name}</div>
         <div class="user-email">${u.email}</div>
       </div>
-      <span class="role-badge ${u.role==='moderator'?'mod':'user'}">${u.role==='moderator'?'Mod':'User'}</span>
+      <div class="avatar">${(u.name||'U').charAt(0).toUpperCase()}</div>
     `;
     list.appendChild(card);
   });
 }
 
-async function createUser() {
-  const name     = document.getElementById('new-user-name').value.trim();
-  const username = document.getElementById('new-user-username').value.trim().toLowerCase();
-  const email    = document.getElementById('new-user-email').value.trim();
-  const pass     = document.getElementById('new-user-pass').value;
-  const role     = document.getElementById('new-user-role').value;
-  const errEl    = document.getElementById('add-user-error');
-  errEl.style.display = 'none';
-
-  if (!name || !username || !email || !pass) {
-    errEl.textContent = 'Please fill all fields';
-    errEl.style.display = 'block';
-    return;
-  }
-
-  try {
-    const { auth, db, createUserWithEmailAndPassword, doc, setDoc, collection, query, where, getDocs } = window.__fb;
-
-    // Check username is unique
-    const uq = query(collection(db,'users'), where('username','==',username));
-    const usnap = await getDocs(uq);
-    if (!usnap.empty) {
-      errEl.textContent = 'Username already taken';
-      errEl.style.display = 'block';
-      return;
-    }
-
-    const result = await createUserWithEmailAndPassword(auth, email, pass);
-    const newUid = result.user.uid;
-
-    await setDoc(doc(db,'users',newUid), { name, username, email, role, createdAt: Date.now() });
-
-    // Sign back in as the moderator
-    // (Firebase automatically signs in newly created user — workaround: sign mod back in)
-    // We'll use a second auth app or warn the user. For simplicity, re-auth mod after.
-    toast('User created! You may need to sign in again.', 'success');
-    document.getElementById('modal-add-user').classList.remove('open');
-    allUsers = [];
-    loadUsers();
-
-    // Re-sign in moderator
-    // (store their email/pass — not ideal in prod; use Admin SDK in production)
-  } catch(e) {
-    errEl.textContent = e.message;
-    errEl.style.display = 'block';
-  }
-}
-
-// ── SEARCH (mod) ──────────────────────────────────────────
+// ── SEARCH ─────────────────────────────────
 async function doSearch() {
   const time = document.getElementById('search-time').value;
-  const type = document.getElementById('search-type').value;
   const date = document.getElementById('search-date').value;
 
-  if (!date) return toast('Please select a date', 'error');
+  if (!date) return toast('יש לבחור תאריך', 'error');
 
   const { db, collection, query, where, getDocs } = window.__fb;
-
   const results = document.getElementById('search-results');
   results.innerHTML = '<div class="loading-wrap"><div class="spinner"></div></div>';
 
@@ -1690,11 +1601,9 @@ async function doSearch() {
   const snap = await getDocs(q);
   let events = snap.docs.map(d => ({ id:d.id, ...d.data() }));
 
-  if (type) events = events.filter(e => e.type === type);
+  if (searchTypeFilter) events = events.filter(e => e.type === searchTypeFilter);
 
   if (time) {
-    // Filter events that overlap the given time (we treat events as point-in-time)
-    // Show events within 1 hour of the search time
     events = events.filter(e => {
       if (!e.time) return false;
       const [eh,em] = e.time.split(':').map(Number);
@@ -1709,7 +1618,7 @@ async function doSearch() {
   results.innerHTML = '';
 
   if (events.length === 0) {
-    results.innerHTML = '<div style="text-align:center;padding:32px;color:var(--muted);font-family:var(--mono);font-size:13px;">No events found</div>';
+    results.innerHTML = '<div style="text-align:center;padding:32px;color:var(--muted);font-size:14px;">לא נמצאו אירועים</div>';
     return;
   }
 
@@ -1723,11 +1632,12 @@ async function doSearch() {
     });
 
     card.innerHTML = `
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;flex-direction:row-reverse;">
+        <div class="result-event-title" style="margin:0;flex:1">${ev.title}</div>
         <div style="width:10px;height:10px;border-radius:50%;background:${ev.color||'#4f8fff'};flex-shrink:0"></div>
-        <div class="result-event-title" style="margin:0">${ev.title}</div>
       </div>
-      <div style="font-family:var(--mono);font-size:12px;color:var(--sub);">${formatTime(null,ev.time)}${ev.timeEnd?' – '+formatTime(null,ev.timeEnd):''} · <span class="event-type-pill" style="display:inline">${ev.type}</span></div>
+      <div style="font-family:var(--mono);font-size:12px;color:var(--sub);text-align:right;direction:ltr;text-align:left;">${formatTime(ev.time)}${ev.timeEnd?' – '+formatTime(ev.timeEnd):''}</div>
+      <div style="margin-top:4px;text-align:right;"><span class="event-type-pill">${ev.type||'אירוע'}</span></div>
       <div class="result-users">
         ${assignedUsers.map(n => `<span class="user-tag">${n}</span>`).join('')}
       </div>
@@ -1736,14 +1646,14 @@ async function doSearch() {
   });
 }
 
-// ── PROFILE ───────────────────────────────────────────────
+// ── PROFILE ────────────────────────────────
 function renderProfile() {
   document.getElementById('profile-email').textContent = userProfile?.email || '—';
   document.getElementById('profile-name').textContent  = userProfile?.name  || '—';
-  document.getElementById('profile-role').textContent  = userProfile?.role  || '—';
+  document.getElementById('profile-role').textContent  = userProfile?.role === 'moderator' ? 'מנהל' : 'משתמש';
 }
 
-// ── CLOSE MODALS ON OVERLAY CLICK ─────────────────────────
+// ── CLOSE MODALS ON OVERLAY CLICK ──────────
 document.querySelectorAll('.modal-overlay').forEach(overlay => {
   overlay.addEventListener('click', e => {
     if (e.target === overlay) overlay.classList.remove('open');
