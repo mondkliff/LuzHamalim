@@ -1616,19 +1616,46 @@ async function doSearch() {
   const results = document.getElementById('search-results');
   results.innerHTML = '<div class="loading-wrap"><div class="spinner"></div></div>';
 
-  let q = query(collection(db,'events'), where('date','==',date));
+  // Fetch all events that START on or before the searched date
+  // Then filter client-side to those whose dateEnd >= searched date
+  // This correctly handles multi-day events
+  const q = query(collection(db,'events'), where('date','<=',date));
   const snap = await getDocs(q);
-  let events = snap.docs.map(d => ({ id:d.id, ...d.data() }));
+  let events = snap.docs
+    .map(d => ({ id:d.id, ...d.data() }))
+    .filter(e => {
+      const end = e.dateEnd || e.date;
+      return end >= date; // event is still active on the searched date
+    });
 
   if (searchTypeFilter) events = events.filter(e => e.type === searchTypeFilter);
 
   if (time) {
+    // Filter events that are active at the searched time on the searched date
+    const [sh, sm] = time.split(':').map(Number);
+    const searchMins = sh * 60 + sm;
     events = events.filter(e => {
-      if (!e.time) return false;
-      const [eh,em] = e.time.split(':').map(Number);
-      const [sh,sm] = time.split(':').map(Number);
-      const eMins = eh*60+em, sMins = sh*60+sm;
-      return Math.abs(eMins - sMins) <= 60;
+      const isMultiDay = e.dateEnd && e.dateEnd !== e.date;
+      if (isMultiDay) {
+        // On first day: from start time to 23:59
+        if (date === e.date) {
+          const [eh, em] = (e.time || '00:00').split(':').map(Number);
+          return searchMins >= eh * 60 + em;
+        }
+        // On last day: from 00:00 to end time
+        if (date === e.dateEnd) {
+          const [eh, em] = (e.timeEnd || '23:59').split(':').map(Number);
+          return searchMins <= eh * 60 + em;
+        }
+        // Middle days: all day
+        return true;
+      }
+      // Single-day event: check if searched time falls within start–end
+      const [sh2, sm2] = (e.time || '00:00').split(':').map(Number);
+      const startMins = sh2 * 60 + sm2;
+      const [eh, em] = (e.timeEnd || '23:59').split(':').map(Number);
+      const endMins = eh * 60 + em;
+      return searchMins >= startMins && searchMins <= endMins;
     });
   }
 
@@ -1650,12 +1677,19 @@ async function doSearch() {
       return u ? u.name : uid.slice(0,8)+'…';
     });
 
+    const timeDisplay = getEventTimeDisplay(ev, date);
+    const isMultiDay = ev.dateEnd && ev.dateEnd !== ev.date;
+    const dateRangeLabel = isMultiDay
+      ? `${ev.date} → ${ev.dateEnd}`
+      : '';
+
     card.innerHTML = `
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;flex-direction:row-reverse;">
         <div class="result-event-title" style="margin:0;flex:1">${ev.title}</div>
         <div style="width:10px;height:10px;border-radius:50%;background:${ev.color||'#4f8fff'};flex-shrink:0"></div>
       </div>
-      <div style="font-family:var(--mono);font-size:12px;color:var(--sub);text-align:right;direction:ltr;text-align:left;">${formatTime(ev.time)}${ev.timeEnd?' – '+formatTime(ev.timeEnd):''}</div>
+      ${isMultiDay ? `<div style="font-size:11px;color:var(--purple);text-align:right;margin-bottom:2px;">📅 ${dateRangeLabel}</div>` : ''}
+      <div style="font-family:var(--mono);font-size:12px;color:var(--sub);direction:ltr;text-align:left;">${timeDisplay}</div>
       <div style="margin-top:4px;text-align:right;"><span class="event-type-pill">${ev.type||'אירוע'}</span></div>
       <div class="result-users">
         ${assignedUsers.map(n => `<span class="user-tag">${n}</span>`).join('')}
