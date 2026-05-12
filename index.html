@@ -1606,6 +1606,12 @@ async function loadUsers() {
 }
 
 // ── SEARCH ─────────────────────────────────
+function toMins(timeStr) {
+  if (!timeStr) return 0;
+  const [h, m] = timeStr.split(':').map(Number);
+  return (h || 0) * 60 + (m || 0);
+}
+
 async function doSearch() {
   const time = document.getElementById('search-time').value;
   const date = document.getElementById('search-date').value;
@@ -1631,30 +1637,30 @@ async function doSearch() {
   if (searchTypeFilter) events = events.filter(e => e.type === searchTypeFilter);
 
   if (time) {
-    // Filter events that are active at the searched time on the searched date
     const [sh, sm] = time.split(':').map(Number);
     const searchMins = sh * 60 + sm;
+
     events = events.filter(e => {
       const isMultiDay = e.dateEnd && e.dateEnd !== e.date;
+
       if (isMultiDay) {
-        // On first day: from start time to 23:59
         if (date === e.date) {
-          const [eh, em] = (e.time || '00:00').split(':').map(Number);
-          return searchMins >= eh * 60 + em;
+          // First day: active from event start time until midnight
+          const startMins = toMins(e.time || '00:00');
+          return searchMins >= startMins;
         }
-        // On last day: from 00:00 to end time
         if (date === e.dateEnd) {
-          const [eh, em] = (e.timeEnd || '23:59').split(':').map(Number);
-          return searchMins <= eh * 60 + em;
+          // Last day: active from midnight until event end time
+          const endMins = toMins(e.timeEnd || '23:59');
+          return searchMins <= endMins;
         }
-        // Middle days: all day
+        // Middle day: active all day
         return true;
       }
-      // Single-day event: check if searched time falls within start–end
-      const [sh2, sm2] = (e.time || '00:00').split(':').map(Number);
-      const startMins = sh2 * 60 + sm2;
-      const [eh, em] = (e.timeEnd || '23:59').split(':').map(Number);
-      const endMins = eh * 60 + em;
+
+      // Single-day: active from start time to end time (or end of day if no timeEnd)
+      const startMins = toMins(e.time || '00:00');
+      const endMins   = toMins(e.timeEnd || '23:59');
       return searchMins >= startMins && searchMins <= endMins;
     });
   }
