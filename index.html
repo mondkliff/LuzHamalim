@@ -1455,7 +1455,7 @@ async function openEventModal(event) {
   buildColorPicker();
   buildTypePills('ev-type-selector', selectedType, (t) => { selectedType = t; });
 
-  selectedUserIds = new Set(event?.userIds || [currentUser.uid]);
+  selectedUserIds = new Set(event?.userIds || []);
   if (allUsers.length === 0) await loadUsers();
   buildUserCheckboxes();
 
@@ -1571,7 +1571,7 @@ async function openEventDetail(ev) {
       const tag = document.createElement('span');
       tag.className = 'user-tag';
       const u = allUsers.find(u => u.id === uid);
-      tag.textContent = uid === currentUser.uid ? 'אתה' : (u ? u.name : uid.slice(0,8)+'…');
+      tag.textContent = uid === currentUser.uid ? 'את/ה' : (u ? u.name : uid.slice(0,8)+'…');
       sharedUsers.appendChild(tag);
     });
   } else {
