@@ -945,7 +945,7 @@ function getWeekDates(offset) {
 }
 
 function isModerator() {
-  return userProfile && userProfile.role === 'moderator';
+  return userProfile?.role === 'moderator';
 }
 
 function showScreen(id) {
@@ -1031,10 +1031,15 @@ function initApp() {
   document.getElementById('topbar-avatar').textContent =
     (userProfile.name || 'U').charAt(0).toUpperCase();
 
-  // Moderator-only UI
+  const fab = document.getElementById('fab');
+  const nav = document.getElementById('bottom-nav');
+  
   if (isMod) {
-    document.getElementById('bottom-nav').classList.remove('hidden');
-    document.getElementById('fab').classList.remove('hidden');
+    fab.classList.remove('hidden');
+    nav.classList.remove('hidden');
+  } else {
+    fab.classList.add('hidden');   // 🔥 ВАЖНО
+    nav.classList.add('hidden');   // 🔥 ВАЖНО
   }
 
   document.querySelectorAll('.nav-item').forEach(btn => {
